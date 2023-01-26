@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { newtClient } from '../lib/newt'
+import type { Article } from '../lib/newt'
+
+const { items: articles } = await newtClient.getContents<Article>({
+  appUid: 'photos',
+  modelUid: 'post',
+  query: {
+    select: ['title', 'slug', 'photo', 'ymd'],
+  },
+})
+
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<ul>
+		  {
+			articles.map((article) => {
+			  return (
+				<li>
+				  <!-- <a href={`/articles/${article.slug}`}>{article.title}</a> -->
+				  <p>{article.ymd}</p>
+				  <img src={article.photo.src}/>
+				</li>
+			  )
+			})
+		  }
+		</ul>
+	</main>
+</Layout>
+
+<style>
+	ul {
+		list-style: none;
+	}
+    img{
+        width: 400px;
+		height: 400px;
+		object-fit: cover;
+    }
+</style>
